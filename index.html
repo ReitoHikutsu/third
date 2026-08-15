@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="かみのやま庵ちゃんのオリジナル芋煮ゲーム" />
+    <title>かみのやま庵ちゃんのオリジナル芋煮ゲーム</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <p class="eyebrow">KAMINOYAMA AN-CHAN</p>
+        <h1>オリジナル芋煮ゲーム</h1>
+        <p>好きな具材を選んで、庵ちゃんだけの一杯を作ろう。</p>
+      </header>
+
+      <section id="selection-screen" aria-labelledby="selection-title">
+        <div class="section-heading">
+          <div>
+            <h2 id="selection-title">具材を選ぶ</h2>
+            <p>4〜6種類がまとまりやすいけれど、少しくらいの冒険は大歓迎。</p>
+          </div>
+          <p class="selection-count" aria-live="polite">選択中 <strong id="selected-count">0</strong> 種類</p>
+        </div>
+        <div id="ingredient-groups" class="ingredient-groups"></div>
+        <div class="action-bar">
+          <p id="selection-hint" class="selection-hint">具材を選んでください。</p>
+          <button id="cook-button" class="primary-button" type="button">この芋煮を作る</button>
+        </div>
+      </section>
+
+      <section id="cooking-screen" class="cooking-screen" hidden aria-live="polite" aria-labelledby="cooking-title">
+        <div class="cooking-card">
+          <div class="cooking-character">
+            <div id="cooking-character-placeholder" class="cooking-character-placeholder" aria-hidden="true">庵<br />ちゃん</div>
+            <img id="cooking-character-image" src="./assets/character/anchan-cooking.png" alt="調理中の庵ちゃん" hidden />
+          </div>
+          <p class="eyebrow">COOKING NOW</p>
+          <h2 id="cooking-title">庵ちゃんが芋煮を作っています</h2>
+          <p id="cooking-message" class="cooking-message">下準備中……</p>
+          <div class="cooking-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+      </section>
+
+      <section id="result-screen" hidden aria-labelledby="result-title">
+        <div class="result-card">
+          <div class="character-panel">
+            <div id="character-placeholder" class="character-placeholder" aria-hidden="true">庵<br />ちゃん</div>
+            <img id="character-image" alt="庵ちゃんのリアクション" hidden />
+            <p id="reaction-text" class="reaction-text"></p>
+          </div>
+          <div class="result-content">
+            <p class="eyebrow">完成！</p>
+            <h2 id="result-title">庵ちゃんの採点</h2>
+            <p id="recipe-name" class="recipe-name"></p>
+            <div id="selected-ingredients" class="selected-ingredients" aria-label="選んだ具材"></div>
+            <h3 class="result-subheading">基本点</h3>
+            <dl id="score-breakdown" class="score-breakdown"></dl>
+            <div class="base-score"><span>基本点</span><strong id="base-score"></strong></div>
+            <section class="combo-section" aria-labelledby="combo-title">
+              <h3 id="combo-title" class="result-subheading">COMBO BONUS</h3>
+              <ul id="combo-list" class="combo-list"></ul>
+              <p id="combo-total" class="combo-total"></p>
+              <div id="combo-reactions" class="combo-reactions" aria-label="コンボへの庵ちゃんのコメント"></div>
+            </section>
+            <div class="score-meta"><span id="count-multiplier"></span><span id="subtotal-score"></span></div>
+            <div class="total-score"><span>最終スコア</span><strong id="total-score"></strong></div>
+            <button id="retry-button" class="secondary-button" type="button">もう一度作る</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>
