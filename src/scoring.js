@@ -37,9 +37,17 @@ export const combinationBonuses = [
 function getCombinationBonuses(ids) { return combinationBonuses.filter(({requiredIngredients}) => requiredIngredients.every(id => ids.has(id))); }
 function normalisedAverage(items, key, max) { return items.reduce((sum,item) => sum + item[key],0) / items.length / 10 * max; }
 export function getIngredientCountMultiplier(count) {
-  if (count === 1) return 0.7; if (count === 2) return 0.8; if (count === 3) return 0.9;
-  if (count <= 6) return 1; if (count === 7) return 0.95; if (count === 8) return 0.9;
-  if (count === 9) return 0.85; if (count === 10) return 0.8; return 0.7;
+  if (count === 1) return 0.7;
+  if (count === 2) return 0.8;
+  if (count === 3) return 0.9;
+  if (count <= 6) return 1.0;
+
+  if (count <= 10) {
+    return 1.0 - (count - 6) * 0.05;
+  }
+
+  // 11〜30種類：0.75 → 0.20
+  return 0.75 - (count - 10) * (0.55 / 20);
 }
 
 export function calculateScore(selectedIngredients) {
