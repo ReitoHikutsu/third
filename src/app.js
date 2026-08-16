@@ -42,9 +42,9 @@ function showResult(selected) {
   $('#score-breakdown').innerHTML = Object.values(result.scores).map(({label,value,max}) => `<dt>${label}</dt><dd>${value} / ${max}</dd>`).join('');
   $('#base-score').textContent = `${result.baseScore} / 100`;
   $('#combo-list').innerHTML = result.appliedBonuses.length
-    ? result.appliedBonuses.map(({name,points}) => `<li><span>${name}</span><strong>+${points}</strong></li>`).join('')
+    ? result.appliedBonuses.map(({name,points}) => `<li><span>${name}</span><strong>${points >= 0 ? `+${points}` : points}</strong></li>`).join('')
     : '<li class="no-combo">今回はコンボなし</li>';
-  $('#combo-total').textContent = `コンボボーナス：+${result.comboBonus}`;
+  $('#combo-total').textContent = `コンボボーナス：${result.comboBonus >= 0 ? '+' : ''}${result.comboBonus}`;
   $('#combo-reactions').innerHTML = result.appliedBonuses.map(({reaction}) => `<p>「${reaction}」</p>`).join('');
   $('#subtotal-score').textContent = `小計 ${result.subtotal}点`;
   $('#count-multiplier').textContent = `具材数補正 ×${Math.round(result.multiplier * 100)}%`;

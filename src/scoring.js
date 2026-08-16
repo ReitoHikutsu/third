@@ -31,10 +31,26 @@ export const combinationBonuses = [
   { requiredIngredients:['wine','beef','maitake'], name:'ワイン香る芋煮', points:8, reaction:'ワインの香りがする……ちょっと大人の芋煮だね！' },
   { requiredIngredients:['wine','cheese','eel'], name:'庵ちゃんの晩酌', points:6, reaction:'ワインにチーズ……って、うなぎまで！？どういうこと！？' },
   { requiredIngredients:['natto','kimchi','cheese'], name:'発酵トリオ', points:7, reaction:'発酵食品が大集合！これはクセになりそう！' },
-  { requiredIngredients:['curry','udon','beef'], name:'カレーうどん芋煮', points:10, reaction:'待って、これカレーうどんじゃない！？……でもおいしそう！' }
+  { requiredIngredients:['curry','udon','beef'], name:'カレーうどん芋煮', points:10, reaction:'待って、これカレーうどんじゃない！？……でもおいしそう！' },
+  { excludedCategories:['ベース'], name:'味付け忘れ', points:-20, reaction:'……あれ？味付け、忘れてない？' }
 ];
 
-function getCombinationBonuses(ids) { return combinationBonuses.filter(({requiredIngredients}) => requiredIngredients.every(id => ids.has(id))); }
+function getCombinationBonuses(selectedIngredients) {
+  const ids = new Set(selectedIngredients.map(item => item.id));
+  const categories = new Set(selectedIngredients.map(item => item.category));
+
+  return combinationBonuses.filter(({ requiredIngredients, excludedIngredients, requiredCategories, excludedCategories }) => {
+    const includesRequiredIngredients = !requiredIngredients || requiredIngredients.every(id => ids.has(id));
+    const excludesForbiddenIngredients = !excludedIngredients || excludedIngredients.every(id => !ids.has(id));
+    const includesRequiredCategories = !requiredCategories || requiredCategories.every(category => categories.has(category));
+    const excludesForbiddenCategories = !excludedCategories || excludedCategories.every(category => !categories.has(category));
+
+    return includesRequiredIngredients
+      && excludesForbiddenIngredients
+      && includesRequiredCategories
+      && excludesForbiddenCategories;
+  });
+}
 function normalisedAverage(items, key, max) { return items.reduce((sum,item) => sum + item[key],0) / items.length / 10 * max; }
 export function getIngredientCountMultiplier(count) {
   if (count === 1) return 0.7;
@@ -52,8 +68,7 @@ export function getIngredientCountMultiplier(count) {
 
 export function calculateScore(selectedIngredients) {
   const raw = Object.fromEntries(Object.entries(statConfig).map(([key,{max}]) => [key, normalisedAverage(selectedIngredients,key,max)]));
-  const ids = new Set(selectedIngredients.map(item => item.id));
-  const appliedBonuses = getCombinationBonuses(ids);
+  const appliedBonuses = getCombinationBonuses(selectedIngredients);
   const scores = Object.fromEntries(Object.entries(statConfig).map(([key,{max,label}]) => [key, { label, max, value:Math.max(0,Math.min(max,Math.round(raw[key]))) }]));
   const baseScore = Object.values(scores).reduce((sum,{value}) => sum + value,0);
   const comboBonus = appliedBonuses.reduce((sum,{points}) => sum + points,0);
